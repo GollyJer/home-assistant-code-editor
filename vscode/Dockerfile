@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.1.0
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.3.0
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
@@ -20,8 +20,8 @@ COPY vscode.extensions /root/vscode.extensions
 
 # Setup base system
 ARG BUILD_ARCH=amd64
-ARG CODE_SERVER_VERSION="v4.107.0"
-ARG HA_CLI_VERSION="4.45.0"
+ARG CODE_SERVER_VERSION="v4.118.0"
+ARG HA_CLI_VERSION="5.1.0"
 # hadolint ignore=SC2181, DL3008
 RUN \
     apt-get update \
@@ -33,13 +33,13 @@ RUN \
         colordiff=1.0.21-1 \
         git=1:2.47.3-0+deb13u1 \
         iputils-ping=3:20240905-3 \
-        locales=2.41-12 \
-        mariadb-client=1:11.8.3-0+deb13u1 \
+        locales=2.41-12+deb13u2 \
+        mariadb-client=1:11.8.6-0+deb13u1 \
         mosquitto-clients=2.0.21-1 \
         net-tools=2.10-1.3 \
         nmap=7.95+dfsg-3 \
-        openssh-client=1:10.0p1-7 \
-        openssl=3.5.4-1~deb13u1 \
+        openssh-client=1:10.0p1-7+deb13u2 \
+        openssl=3.5.5-1~deb13u2 \
         python3-dev=3.13.5-1 \
         python3-venv=3.13.5-1 \
         python3=3.13.5-1 \
