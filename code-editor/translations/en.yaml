@@ -1,0 +1,17 @@
+---
+configuration:
+  log_level:
+    name: Log level
+    description: Controls how much detail appears in the Log tab.
+
+  config_path:
+    name: Startup folder
+    description: Folder Code Editor opens when it starts. Use /config for the main Home Assistant configuration.
+
+  packages:
+    name: Extra packages
+    description: Installs additional command-line packages when Code Editor starts. This can slow startup.
+
+  init_commands:
+    name: Startup commands
+    description: Runs shell commands each time Code Editor starts. Invalid commands can prevent startup.

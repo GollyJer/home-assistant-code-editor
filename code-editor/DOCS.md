@@ -6,7 +6,8 @@ Home Assistant.
 ## Configuration
 
 Most users can leave the configuration as-is. By default, Code Editor opens your
-Home Assistant configuration folder and does not run any extra startup actions.
+Home Assistant configuration folder, uses the normal log level, and does not run
+any extra startup actions.
 
 However, if you want to make lower level changes, these configuration items are available. Save the change and restart Code Editor after making changes.
 
@@ -14,9 +15,9 @@ However, if you want to make lower level changes, these configuration items are 
 
 Controls how much detail appears in the **Log** tab.
 
-You can leave this blank for normal use. If you are trying to understand a
-problem, choose `debug` for more detail. Use `trace` only when very detailed logs
-are needed.
+The default value is `info`, which is right for normal use. If you are trying to
+understand a problem, choose `debug` for more detail. Use `trace` only when very
+detailed logs are needed.
 
 Available choices:
 
@@ -32,14 +33,14 @@ Available choices:
 
 Controls the folder Code Editor opens when it starts.
 
-You can leave this blank to open your main Home Assistant configuration folder:
+The default value is your main Home Assistant configuration folder:
 
 ```text
 /config
 ```
 
-Use this option only if you want Code Editor to open a different folder by
-default, such as:
+Change this only if you want Code Editor to open a different folder when it
+starts, such as:
 
 ```text
 /share/my-folder
