@@ -59,8 +59,8 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-frenck@frenck.dev.
+reported privately to the project maintainer using the contact information
+listed on the repository owner's GitHub profile.
 
 All complaints will be reviewed and investigated promptly and fairly.
 

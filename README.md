@@ -1,126 +1,57 @@
-# Home Assistant Community Add-on: Studio Code Server
+# Code Editor
 
-[![GitHub Release][releases-shield]][releases]
-![Project Stage][project-stage-shield]
-[![License][license-shield]](LICENSE.md)
+Code Editor is a Home Assistant app that provides a browser-based Visual Studio
+Code experience for editing your Home Assistant configuration. It is powered by
+[code-server](https://github.com/coder/code-server) and runs inside the Home
+Assistant frontend through ingress.
 
-![Supports aarch64 Architecture][aarch64-shield]
-![Supports amd64 Architecture][amd64-shield]
+![Code Editor in the Home Assistant frontend](images/screenshot.png)
 
-[![Github Actions][github-actions-shield]][github-actions]
-![Project Maintenance][maintenance-shield]
-[![GitHub Activity][commits-shield]][commits]
+## Features
 
-[![Discord][discord-shield]][discord]
-[![Community Forum][forum-shield]][forum]
+- Browser-based code editing inside Home Assistant.
+- Home Assistant YAML language support and schema validation.
+- ESPHome, YAML, Jinja, Python, Ruff, Prettier, and icon tooling bundled in the
+  image.
+- Home Assistant API access through Supervisor-provided environment variables.
+- Persistent editor settings, extensions, terminal history, and Git config.
+- Sensible defaults for Home Assistant configuration folders, generated files,
+  database files, and frontend assets.
 
-[![Sponsor Frenck via GitHub Sponsors][github-sponsors-shield]][github-sponsors]
+## Installation
 
-[![Support Frenck on Patreon][patreon-shield]][patreon]
+This repository contains a Home Assistant Supervisor app. Install it by adding
+this repository URL to the Home Assistant app store as a custom repository, then
+installing **Code Editor** from the app list.
 
-A VSCode experience, accessible through the browser.
+This is not a HACS integration. HACS manages custom integrations, frontend
+cards, themes, and similar resources; Supervisor apps are installed from the
+Home Assistant app store.
 
-![Studio Code Server in the Home Assistant Frontend](images/screenshot.png)
+## Documentation
 
-## About
+Full configuration and usage notes are in [vscode/DOCS.md](vscode/DOCS.md).
 
-This add-on runs [code-server](https://github.com/cdr/code-server), which
-gives you a Visual Studio Code experience straight from the browser. It allows
-you to edit your Home Assistant configuration directly from your web browser,
-directly from within the Home Assistant frontend.
+## Versioning
 
-The add-on has the Home Assistant, MDI icons and YAML extensions pre-installed
-and pre-configured right out of the box. This means that auto-completion works
-instantly, without the need for configuring anything.
+The app version is aligned with the embedded Visual Studio Code version when the
+runtime changes. This release uses VS Code `1.118.0` through code-server
+`v4.118.0`.
 
-[:books: Read the full add-on documentation][docs]
+Packaging-only fixes can still use normal patch increments on the same version
+train when needed.
 
 ## Support
 
-Got questions?
+Open an issue in this repository for problems with this app. When reporting an
+issue, include the app version, Home Assistant OS version, Home Assistant Core
+version, Supervisor version, architecture, and the app log.
 
-You have several options to get them answered:
+## Credits
 
-- The [Home Assistant Community Add-ons Discord chat server][discord] for add-on
-  support and feature requests.
-- The [Home Assistant Discord chat server][discord-ha] for general Home
-  Assistant discussions and questions.
-- The Home Assistant [Community Forum][forum].
-- Join the [Reddit subreddit][reddit] in [/r/homeassistant][reddit]
-
-You could also [open an issue here][issue] GitHub.
-
-## Contributing
-
-This is an active open-source project. We are always open to people who want to
-use the code or contribute to it.
-
-We have set up a separate document containing our
-[contribution guidelines](.github/CONTRIBUTING.md).
-
-Thank you for being involved! :heart_eyes:
-
-## Authors & contributors
-
-The original setup of this repository is by [Franck Nijhof][frenck].
-
-For a full list of all authors and contributors,
-check [the contributor's page][contributors].
-
-## We have got some Home Assistant add-ons for you
-
-Want some more functionality to your Home Assistant instance?
-
-We have created multiple add-ons for Home Assistant. For a full list, check out
-our [GitHub Repository][repository].
+This app is based on the original Home Assistant Community Add-on Studio Code
+Server project by Franck Nijhof and contributors.
 
 ## License
 
-MIT License
-
-Copyright (c) 2019-2025 Franck Nijhof
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-[aarch64-shield]: https://img.shields.io/badge/aarch64-yes-green.svg
-[amd64-shield]: https://img.shields.io/badge/amd64-yes-green.svg
-[commits-shield]: https://img.shields.io/github/commit-activity/y/hassio-addons/addon-vscode.svg
-[commits]: https://github.com/hassio-addons/addon-vscode/commits/main
-[contributors]: https://github.com/hassio-addons/addon-vscode/graphs/contributors
-[discord-ha]: https://discord.gg/c5DvZ4e
-[discord-shield]: https://img.shields.io/discord/478094546522079232.svg
-[discord]: https://discord.me/hassioaddons
-[docs]: https://github.com/hassio-addons/addon-vscode/blob/main/vscode/DOCS.md
-[forum-shield]: https://img.shields.io/badge/community-forum-brightgreen.svg
-[forum]: https://community.home-assistant.io/t/home-assistant-community-add-on-visual-studio-code/107863?u=frenck
-[frenck]: https://github.com/frenck
-[github-actions-shield]: https://github.com/hassio-addons/addon-vscode/workflows/CI/badge.svg
-[github-actions]: https://github.com/hassio-addons/addon-vscode/actions
-[github-sponsors-shield]: https://frenck.dev/wp-content/uploads/2019/12/github_sponsor.png
-[github-sponsors]: https://github.com/sponsors/frenck
-[issue]: https://github.com/hassio-addons/addon-vscode/issues
-[license-shield]: https://img.shields.io/github/license/hassio-addons/addon-vscode.svg
-[maintenance-shield]: https://img.shields.io/maintenance/yes/2025.svg
-[patreon-shield]: https://frenck.dev/wp-content/uploads/2019/12/patreon.png
-[patreon]: https://www.patreon.com/frenck
-[project-stage-shield]: https://img.shields.io/badge/project%20stage-production%20ready-brightgreen.svg
-[reddit]: https://reddit.com/r/homeassistant
-[releases-shield]: https://img.shields.io/github/release/hassio-addons/addon-vscode.svg
-[releases]: https://github.com/hassio-addons/addon-vscode/releases
-[repository]: https://github.com/hassio-addons/repository
+MIT License. See [LICENSE.md](LICENSE.md).

@@ -1,13 +1,13 @@
 ---
-name: Studio Code Server (GollyJer)
-version: dev
-slug: vscode_gollyjer
-description: Fully featured Visual Studio Code (VSCode) experience integrated in the Home Assistant frontend.
+name: Code Editor
+version: 1.118.0
+slug: code_editor
+description: Browser-based code editor for Home Assistant, powered by code-server.
 url: https://github.com/gollyjer/addon-vscode
 ingress: true
 ingress_port: 1337
 ingress_stream: true
-panel_icon: mdi:microsoft-visual-studio-code
+panel_icon: mdi:file-code-outline
 startup: services
 init: false
 arch:
