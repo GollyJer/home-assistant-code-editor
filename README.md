@@ -3,7 +3,7 @@
 Code Editor lets you edit your Home Assistant configuration files directly from
 Home Assistant.
 
-![Code Editor in the Home Assistant frontend](images/screenshot.png)
+![Code Editor in the Home Assistant frontend](assets/screenshot.png)
 
 ## Why use Code Editor?
 
