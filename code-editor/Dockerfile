@@ -52,9 +52,9 @@ RUN \
     \
     && curl -fsSL https://bootstrap.pypa.io/get-pip.py | python3 \
     \
-    && if [[ "${BUILD_ARCH}" = "aarch64" ]]; then ARCH="arm64"; fi \
-    && if [[ "${BUILD_ARCH}" = "amd64" ]]; then ARCH="amd64"; fi \
-    && if [[ -z "${ARCH:-}" ]]; then echo "Unsupported build architecture: ${BUILD_ARCH}"; exit 1; fi \
+    && if [[ "${BUILD_ARCH}" = "aarch64" ]]; then ARCH="arm64"; VSCODE_TARGET="linux-arm64"; fi \
+    && if [[ "${BUILD_ARCH}" = "amd64" ]]; then ARCH="amd64"; VSCODE_TARGET="linux-x64"; fi \
+    && if [[ -z "${ARCH:-}" || -z "${VSCODE_TARGET:-}" ]]; then echo "Unsupported build architecture: ${BUILD_ARCH}"; exit 1; fi \
     && curl -fJL --retry 5 -o /tmp/code.tar.gz \
         "https://github.com/coder/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION#v}-linux-${ARCH}.tar.gz" \
     && mkdir -p /usr/local/lib/code-server \
@@ -73,15 +73,23 @@ RUN \
         vendor="${extension%%.*}"; \
         slug="${extension#*.}"; \
         version="${ext##*#}"; \
+        package_url="https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${vendor}/vsextensions/${slug}/${version}/vspackage"; \
+        platform_package_url="${package_url}?targetPlatform=${VSCODE_TARGET}"; \
         \
-        echo "Installing vscode extension: ${slug} by ${vendor} @ ${version} "; \
+        echo "Installing vscode extension: ${slug} by ${vendor} @ ${version} for ${VSCODE_TARGET} "; \
         \
-        echo "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${vendor}/vsextensions/${slug}/${version}/vspackage"; \
-        curl -fJL --compressed --retry 5 -o "/usr/local/share/code-server/vsix/${extension}-${version}.vsix" \
+        echo "${platform_package_url}"; \
+        if ! curl -fJL --compressed --retry 5 -o "/usr/local/share/code-server/vsix/${extension}-${version}.vsix" \
             -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" \
             -H "x-market-user-id: ${uuid}" \
-            "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${vendor}/vsextensions/${slug}/${version}/vspackage"; \
-        [ $? -ne 0 ] && exit 1; \
+            "${platform_package_url}"; then \
+            echo "No ${VSCODE_TARGET} VSIX found for ${extension}; falling back to universal package."; \
+            curl -fJL --compressed --retry 5 -o "/usr/local/share/code-server/vsix/${extension}-${version}.vsix" \
+                -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" \
+                -H "x-market-user-id: ${uuid}" \
+                "${package_url}" \
+                || exit 1; \
+        fi; \
         unzip -tq "/usr/local/share/code-server/vsix/${extension}-${version}.vsix" >/dev/null \
             || { echo "Downloaded extension package is not a valid VSIX: ${extension} ${version}"; exit 1; }; \
         sleep 1; \

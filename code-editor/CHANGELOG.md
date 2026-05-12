@@ -60,6 +60,8 @@ summarizes the Code Editor modernization through
 
 - Changed build-time extension handling to download validated VSIX packages into
   `/usr/local/share/code-server/vsix`.
+- Downloads platform-specific VSIX packages for each supported architecture so
+  native extension binaries, such as Ruff, match the Linux runtime.
 - Changed startup extension handling to install bundled VSIX packages through
   `code-server --install-extension` into `/data/code-editor/extensions`.
 - Avoids reinstalling bundled extensions when the requested version is already
@@ -68,8 +70,8 @@ summarizes the Code Editor modernization through
   `extensions.json`, from persistent extension storage on startup.
 - Added warnings for missing or failed bundled extension installs so extension
   state is easier to diagnose.
-- Added `extensions.supportNodeGlobalNavigator` for newer extension runtime
-  behavior.
+- Disabled Node global `navigator` support by default to avoid known extension
+  compatibility issues in the bundled extension host.
 - Disabled extension auto-check and auto-update by default so the Home Assistant
   editor environment stays deterministic across restarts.
 
@@ -99,7 +101,7 @@ summarizes the Code Editor modernization through
 - Updated the integrated terminal configuration to use the modern zsh profile
   settings.
 - Added defaults for line endings, final newlines, trimming trailing whitespace,
-  the Python interpreter path, Ruff behavior, and telemetry opt-outs.
+  the Python interpreter path, optional Ruff behavior, and telemetry opt-outs.
 - Preserved Home Assistant YAML associations, YAML custom tags, ESPHome local
   validation, and format-on-save behavior for Home Assistant YAML files.
 

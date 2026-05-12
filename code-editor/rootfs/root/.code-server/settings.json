@@ -92,7 +92,7 @@
   },
   "editor.renderWhitespace": "boundary",
   "extensions.autoCheckUpdates": false,
-  "extensions.supportNodeGlobalNavigator": true,
+  "extensions.supportNodeGlobalNavigator": false,
   "extensions.autoUpdate": false,
   "files.eol": "\n",
   "files.insertFinalNewline": true,
