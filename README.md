@@ -1,51 +1,67 @@
 # Code Editor
 
-Code Editor is a Home Assistant app that provides a browser-based Visual Studio
-Code experience for editing your Home Assistant configuration. It is powered by
-[code-server](https://github.com/coder/code-server) and runs inside the Home
-Assistant frontend through ingress.
+Code Editor lets you edit your Home Assistant configuration files directly from
+Home Assistant.
 
 ![Code Editor in the Home Assistant frontend](images/screenshot.png)
 
-## Features
+## Why use Code Editor?
 
-- Browser-based code editing inside Home Assistant.
-- Home Assistant YAML language support and schema validation.
-- ESPHome, YAML, Jinja, Python, Ruff, Prettier, and icon tooling bundled in the
-  image.
-- Home Assistant API access through Supervisor-provided environment variables.
-- Persistent editor settings, extensions, terminal history, and Git config.
-- Sensible defaults for Home Assistant configuration folders, generated files,
-  database files, and frontend assets.
+- Edit Home Assistant configuration files from the same place you manage your
+  home.
+- Get helpful suggestions while writing automations, scripts, sensors, scenes,
+  and dashboards.
+- Catch common YAML and formatting problems before restarting Home Assistant.
+- Work with ESPHome, templates, icons, Python files, and logs in one editor.
+- Keep your editor preferences between updates.
 
 ## Installation
 
-This repository contains a Home Assistant Supervisor app. Install it by adding
-this repository URL to the Home Assistant app store as a custom repository, then
-installing **Code Editor** from the app list.
+[![Add repository to my Home Assistant][repository-badge]][repository-url]
 
-This is not a HACS integration. HACS manages custom integrations, frontend
-cards, themes, and similar resources; Supervisor apps are installed from the
-Home Assistant app store.
+After adding the repository:
 
-## Documentation
+1. Open **Settings** in Home Assistant.
+2. Go to **Apps**.
+3. Select **Install app**.
+4. Search for **Code Editor**.
+5. Install and start the app.
+6. Open **Code Editor** from the Home Assistant sidebar.
 
-Full configuration and usage notes are in [vscode/DOCS.md](vscode/DOCS.md).
+If the button does not work, add this repository manually:
 
-## Versioning
+```text
+https://github.com/gollyjer/addon-vscode
+```
 
-The app version is aligned with the embedded Visual Studio Code version when the
-runtime changes. This release uses VS Code `1.118.0` through code-server
-`v4.118.0`.
+## What the included extensions do
 
-Packaging-only fixes can still use normal patch increments on the same version
-train when needed.
+Code Editor includes extensions chosen for editing Home Assistant files:
 
-## Support
+- **Home Assistant Config Helper** adds Home Assistant-aware suggestions and
+  validation while editing YAML configuration.
+- **YAML** helps find indentation, spacing, and structure problems in YAML files.
+- **ESPHome** makes ESPHome device configuration easier to read and edit.
+- **Jinja** improves editing for Home Assistant templates used in automations,
+  template sensors, notifications, and dashboards.
+- **Material Design Icons Intellisense** helps you find and insert `mdi:` icons
+  used throughout Home Assistant.
+- **Prettier** formats supported files so configuration stays consistent and easy
+  to scan.
+- **Python**, **Pylance**, and **Ruff** help when editing Python files used by
+  advanced Home Assistant setups.
+- **Log File Highlighter** makes Home Assistant logs easier to read when you need
+  to troubleshoot a problem.
+- **vscode-icons** adds file and folder icons so configuration files are easier to
+  recognize at a glance.
 
-Open an issue in this repository for problems with this app. When reporting an
-issue, include the app version, Home Assistant OS version, Home Assistant Core
-version, Supervisor version, architecture, and the app log.
+## More help
+
+More configuration and usage notes are available in
+[code-editor/DOCS.md](code-editor/DOCS.md).
+
+If something is not working, please
+[open an issue](https://github.com/gollyjer/addon-vscode/issues).
 
 ## Credits
 
@@ -55,3 +71,6 @@ and contributors.
 ## License
 
 MIT License. See [LICENSE.md](LICENSE.md).
+
+[repository-badge]: https://img.shields.io/badge/Add_repository_to_my-Home%20Assistant-41BDF5?logo=home-assistant&style=for-the-badge
+[repository-url]: https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fgollyjer%2Faddon-vscode
