@@ -47,7 +47,7 @@ RUN \
         uuid-runtime=2.41-5 \
         wget=1.25.0-2 \
         zip=3.0-15 \
-        zsh=5.9-8+b14 \
+        zsh=5.9-8+b21 \
         less=668-1 \
     \
     && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
@@ -60,7 +60,7 @@ RUN \
     && curl -J -L -o /tmp/code.tar.gz \
         "https://github.com/coder/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION#v}-linux-${ARCH}.tar.gz" \
     && mkdir -p /usr/local/lib/code-server \
-    && tar zxvf \
+    && tar zxf \
         /tmp/code.tar.gz \
         --strip 1 -C /usr/local/lib/code-server \
     \
@@ -69,6 +69,8 @@ RUN \
     && mkdir -p /root/.code-server/extensions \
     && uuid=$(uuidgen) \
     && while read -r ext; do \
+        ext="${ext//$'\r'/}"; \
+        [[ -z "${ext%%#*}" ]] && continue; \
         extention="${ext%%#*}" \
         vendor="${extention%%.*}"; \
         slug="${extention#*.}"; \
