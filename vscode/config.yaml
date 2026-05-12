@@ -1,9 +1,9 @@
 ---
-name: Studio Code Server
+name: Studio Code Server (GollyJer)
 version: dev
-slug: vscode
+slug: vscode_gollyjer
 description: Fully featured Visual Studio Code (VSCode) experience integrated in the Home Assistant frontend.
-url: https://github.com/hassio-addons/addon-vscode
+url: https://github.com/gollyjer/addon-vscode
 ingress: true
 ingress_port: 1337
 ingress_stream: true

@@ -132,6 +132,12 @@ RUN \
 # Copy root filesystem
 COPY rootfs /
 
+RUN \
+    chmod a+x /usr/local/bin/code \
+    && find /etc/s6-overlay/s6-rc.d \
+        \( -name run -o -name finish -o -name up \) \
+        -exec chmod a+x '{}' +
+
 # Health check
 HEALTHCHECK \
     CMD curl --fail http://127.0.0.1:1337/healthz || exit 1
