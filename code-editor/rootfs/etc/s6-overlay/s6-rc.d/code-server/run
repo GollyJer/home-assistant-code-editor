@@ -6,6 +6,9 @@
 # ==============================================================================
 declare -a options
 declare config_path
+readonly CODE_EDITOR_DATA_PATH="/data/code-editor"
+readonly CODE_EDITOR_EXTENSIONS_PATH="${CODE_EDITOR_DATA_PATH}/extensions"
+readonly CODE_SERVER_CONFIG_PATH="${CODE_EDITOR_DATA_PATH}/code-server.yaml"
 
 bashio::log.info 'Starting code-server...'
 
@@ -15,8 +18,9 @@ if bashio::config.has_value 'config_path'; then
 fi
 
 options+=(--port 1337)
-options+=(--user-data-dir "/data/vscode")
-options+=(--extensions-dir "/data/vscode/extensions")
+options+=(--user-data-dir "${CODE_EDITOR_DATA_PATH}")
+options+=(--extensions-dir "${CODE_EDITOR_EXTENSIONS_PATH}")
+options+=(--config "${CODE_SERVER_CONFIG_PATH}")
 options+=(--host 0.0.0.0)
 options+=(--disable-telemetry)
 options+=(--disable-update-check)
