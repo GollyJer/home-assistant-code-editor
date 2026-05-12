@@ -1,7 +1,7 @@
 #!/command/with-contenv bashio
 # shellcheck shell=bash
 # ==============================================================================
-# Home Assistant Community Add-on: Studio Code Server
+# Code Editor
 # Sets up code-server.
 # ==============================================================================
 declare config_path
@@ -21,6 +21,11 @@ readonly -a PREVIOUS_DEFAULT_CONFIG_HASHES=(
     b28a299111ac74cc9498f76ce2cb437b2cf5e8e7bb9388d9929347e2948bd56591bd499d5de04638553f6e12fa77c53320a046e96cffce9fa4f8c924d5c91581
     dbe905f0935b2fea8bb5ba379bff78db9d056ea6d0965c68aa9b07938a52cbbf117186452b2b6c766aa4cf93cc3494ad91b763e8500e515e41d8cde31a3821ae
     2212babaa9dc46d38ba239052c9c05151abe517cc8b493d0d351a96bf70c1efa4f7479f6ed0b75811429ba649906eb5657d73b0732b460e718a5c66603dcdbda
+    4af003224345302a7f04cf40703554da5a1d8baba512dcb16cf50147f33cf06199f9ef1ddde5a2ecbc5e923ca02d1316ae62588aa9fc439a6cd994576a2b019d
+    7588aa36060b1f9a51d83b0e42265021dd99a667fb9d45905e2e3eb5531d8b035dd184d159155e4bdf955e40f5abcc4eaae2905f7a1ad8ee13a95bba9655e34e
+    3d23d083ba87534df622d16474fa5340949827afab1206cf01c622411da0b5419c1de0bfd08c55f987004570e751306c84fa843d1a0180ae3e0263dae76a2de0
+    e23284b1cb055f76be07c9f89a7cdefee7ad24b88d3f848600d32f03ea7273ac725d0335bcd4fd84cf135c12642de85faa7515498af7a2eb34ced35dc39563b8
+    396c1ab6678142f632555b68a683faf3baa72c793b972da20991f51f562a512522878267996434d5e7f4044545980ec56d53d67d0edf7728cda791ab01118086
 )
 
 if bashio::config.has_value 'config_path'; then
@@ -44,15 +49,49 @@ if ! bashio::fs.directory_exists '/data/vscode'; then
         || bashio::exit.nok "Could not create persistent storage folder."
 fi
 
-# Clean up copies of extensions we deliver from the persistent storage
-while read -r ext; do
-    extension="${ext%%#*}"
-    # shellcheck disable=SC2086
-    rm -f -r /data/vscode/extensions/${extension,,}*
-done < /root/vscode.extensions
-
 # Ensure user extensions folder exists
 mkdir -p /data/vscode/extensions
+
+# Clear stale extension scanner state from previous app versions.
+rm -f /data/vscode/extensions/.obsolete \
+    /data/vscode/extensions/extensions.json
+
+# Install bundled extensions into the runtime extensions folder.
+while read -r ext; do
+    ext="${ext//$'\r'/}"
+    extension="${ext%%#*}"
+    version="${ext##*#}"
+    vsix="/usr/local/share/code-server/vsix/${extension}-${version}.vsix"
+    installed_path=""
+
+    [[ -z "${extension}" ]] && continue
+
+    if ! bashio::fs.file_exists "${vsix}"; then
+        bashio::log.warning "Bundled extension package not found: ${vsix}"
+        continue
+    fi
+
+    installed_path=$(find /data/vscode/extensions \
+        -maxdepth 1 \
+        -type d \
+        -iname "${extension}-${version}" \
+        -print \
+        -quit)
+
+    if [[ -n "${installed_path}" ]]; then
+        bashio::log.info "Bundled extension already installed: ${extension} ${version}"
+        continue
+    fi
+
+    bashio::log.info "Installing bundled extension: ${extension} ${version}"
+
+    if ! code-server \
+        --user-data-dir /data/vscode \
+        --extensions-dir /data/vscode/extensions \
+        --install-extension "${vsix}"; then
+        bashio::log.warning "Failed installing bundled extension: ${extension} ${version}"
+    fi
+done < /root/vscode.extensions
 
 # Sets up default user settings on first start.
 if ! bashio::fs.file_exists '/data/vscode/User/settings.json'; then

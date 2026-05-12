@@ -1,4 +1,4 @@
-ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.1.0
+ARG BUILD_FROM=ghcr.io/hassio-addons/debian-base:9.3.0
 # hadolint ignore=DL3006
 FROM ${BUILD_FROM}
 
@@ -20,26 +20,25 @@ COPY vscode.extensions /root/vscode.extensions
 
 # Setup base system
 ARG BUILD_ARCH=amd64
-ARG CODE_SERVER_VERSION="v4.107.0"
-ARG HA_CLI_VERSION="4.45.0"
+ARG CODE_SERVER_VERSION="v4.118.0"
+ARG HA_CLI_VERSION="5.1.0"
 # hadolint ignore=SC2181, DL3008
 RUN \
     apt-get update \
     \
     && apt-get install -y --no-install-recommends \
         ack=3.8.1-1 \
-        libarchive-tools=3.7.4-4 \
         build-essential=12.12 \
         colordiff=1.0.21-1 \
         git=1:2.47.3-0+deb13u1 \
         iputils-ping=3:20240905-3 \
-        locales=2.41-12 \
-        mariadb-client=1:11.8.3-0+deb13u1 \
+        locales=2.41-12+deb13u2 \
+        mariadb-client=1:11.8.6-0+deb13u1 \
         mosquitto-clients=2.0.21-1 \
         net-tools=2.10-1.3 \
         nmap=7.95+dfsg-3 \
-        openssh-client=1:10.0p1-7 \
-        openssl=3.5.4-1~deb13u1 \
+        openssh-client=1:10.0p1-7+deb13u2 \
+        openssl=3.5.5-1~deb13u2 \
         python3-dev=3.13.5-1 \
         python3-venv=3.13.5-1 \
         python3=3.13.5-1 \
@@ -47,7 +46,7 @@ RUN \
         uuid-runtime=2.41-5 \
         wget=1.25.0-2 \
         zip=3.0-15 \
-        zsh=5.9-8+b14 \
+        zsh=5.9-8+b21 \
         less=668-1 \
     \
     && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
@@ -60,34 +59,35 @@ RUN \
     && curl -J -L -o /tmp/code.tar.gz \
         "https://github.com/coder/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION#v}-linux-${ARCH}.tar.gz" \
     && mkdir -p /usr/local/lib/code-server \
-    && tar zxvf \
+    && tar zxf \
         /tmp/code.tar.gz \
         --strip 1 -C /usr/local/lib/code-server \
     \
     && ln -s /usr/local/lib/code-server/bin/code-server /usr/local/bin/code-server \
     \
-    && mkdir -p /root/.code-server/extensions \
+    && mkdir -p /usr/local/share/code-server/vsix \
     && uuid=$(uuidgen) \
     && while read -r ext; do \
-        extention="${ext%%#*}" \
-        vendor="${extention%%.*}"; \
-        slug="${extention#*.}"; \
+        ext="${ext//$'\r'/}"; \
+        [[ -z "${ext%%#*}" ]] && continue; \
+        extension="${ext%%#*}"; \
+        vendor="${extension%%.*}"; \
+        slug="${extension#*.}"; \
         version="${ext##*#}"; \
         \
         echo "Installing vscode extension: ${slug} by ${vendor} @ ${version} "; \
         \
         echo "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${vendor}/vsextensions/${slug}/${version}/vspackage"; \
-        curl -JL --retry 5 -o "/tmp/${extention}-${version}.vsix" \
+        curl -fJL --compressed --retry 5 -o "/usr/local/share/code-server/vsix/${extension}-${version}.vsix" \
             -H "User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36" \
             -H "x-market-user-id: ${uuid}" \
             "https://marketplace.visualstudio.com/_apis/public/gallery/publishers/${vendor}/vsextensions/${slug}/${version}/vspackage"; \
-        mkdir -p "/usr/local/lib/code-server/lib/vscode/extensions/${extention}-${version}"; \
-        bsdtar --strip-components=1 -xf "/tmp/${extention}-${version}.vsix" \
-                    -C "/usr/local/lib/code-server/lib/vscode/extensions/${extention}-${version}" extension; \
         [ $? -ne 0 ] && exit 1; \
+        unzip -tq "/usr/local/share/code-server/vsix/${extension}-${version}.vsix" >/dev/null \
+            || { echo "Downloaded extension package is not a valid VSIX: ${extension} ${version}"; exit 1; }; \
         sleep 1; \
     done < /root/vscode.extensions \
-    && ls -la /usr/local/lib/code-server/lib/vscode/extensions/ \
+    && ls -la /usr/local/share/code-server/vsix/ \
     \
     && curl -L -s -o /usr/bin/ha \
         "https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_${BUILD_ARCH}" \
@@ -112,7 +112,6 @@ RUN \
     \
     && apt-get purge -y --auto-remove \
         build-essential \
-        libarchive-tools \
         python3-dev \
         uuid-runtime \
     \
@@ -129,6 +128,12 @@ RUN \
 
 # Copy root filesystem
 COPY rootfs /
+
+RUN \
+    chmod a+x /usr/local/bin/code \
+    && find /etc/s6-overlay/s6-rc.d \
+        \( -name run -o -name finish -o -name up \) \
+        -exec chmod a+x '{}' +
 
 # Health check
 HEALTHCHECK \
@@ -150,13 +155,13 @@ LABEL \
     io.hass.arch="${BUILD_ARCH}" \
     io.hass.type="addon" \
     io.hass.version=${BUILD_VERSION} \
-    maintainer="Franck Nijhof <frenck@addons.community>" \
+    maintainer="Jeremy Gollehon <jeremy@thegollys.com>" \
     org.opencontainers.image.title="${BUILD_NAME}" \
     org.opencontainers.image.description="${BUILD_DESCRIPTION}" \
-    org.opencontainers.image.vendor="Home Assistant Community Add-ons" \
-    org.opencontainers.image.authors="Franck Nijhof <frenck@addons.community>" \
+    org.opencontainers.image.vendor="GollyJer" \
+    org.opencontainers.image.authors="Jeremy Gollehon <jeremy@thegollys.com>" \
     org.opencontainers.image.licenses="MIT" \
-    org.opencontainers.image.url="https://addons.community" \
+    org.opencontainers.image.url="https://github.com/${BUILD_REPOSITORY}" \
     org.opencontainers.image.source="https://github.com/${BUILD_REPOSITORY}" \
     org.opencontainers.image.documentation="https://github.com/${BUILD_REPOSITORY}/blob/main/README.md" \
     org.opencontainers.image.created=${BUILD_DATE} \

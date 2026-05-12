@@ -34,7 +34,7 @@
         "ARG CODE_SERVER_VERSION=[\"']?(?<currentValue>.+?)[\"']?\\s+"
       ],
       "datasourceTemplate": "github-releases",
-      "depNameTemplate": "cdr/code-server"
+      "depNameTemplate": "coder/code-server"
     },
     {
       "customType": "regex",
@@ -89,21 +89,6 @@
       "datasourceTemplate": "github-releases",
       "depNameTemplate": "lukas-tr/vscode-materialdesignicons-intellisense",
       "extractVersionTemplate": "^v(?<version>.*)$"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["/vscode/vscode.extensions$/"],
-      "matchStrings": ["netcorext\\.uuid-generator#(?<currentValue>.+)\\s"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "arenchen/vscode-uuid-generator"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["/vscode/vscode.extensions$/"],
-      "matchStrings": ["usernamehw\\.errorlens#(?<currentValue>.+)\\s"],
-      "datasourceTemplate": "github-releases",
-      "depNameTemplate": "usernamehw/vscode-error-lens",
-      "extractVersionTemplate": "^v(?<version>.*)$"
     }
   ],
   "packageRules": [
@@ -112,11 +97,11 @@
       "automerge": true
     },
     {
-      "groupName": "Add-on base image",
+      "groupName": "App base image",
       "matchDatasources": ["docker"]
     },
     {
-      "groupName": "Add-on base image",
+      "groupName": "App base image",
       "matchDatasources": ["docker"],
       "matchUpdateTypes": ["minor", "patch"],
       "automerge": true

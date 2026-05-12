@@ -2,6 +2,10 @@
 
 > (Why the issue was filed)
 
+## Environment
+
+> (Code Editor version, Home Assistant OS/Core/Supervisor versions, and architecture)
+
 ## Expected behavior
 
 > (What you expected to happen)
