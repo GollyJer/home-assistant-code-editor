@@ -9,6 +9,7 @@ readonly CODE_EDITOR_DATA_PATH="/data/code-editor"
 readonly CODE_EDITOR_EXTENSIONS_PATH="${CODE_EDITOR_DATA_PATH}/extensions"
 readonly CODE_EDITOR_SETTINGS_PATH="${CODE_EDITOR_DATA_PATH}/User/settings.json"
 readonly CODE_SERVER_CONFIG_PATH="${CODE_EDITOR_DATA_PATH}/code-server.yaml"
+readonly CODE_EDITOR_RUFF_DEFAULT_PATH="/root/.code-server/.ruff.toml"
 
 # Hashes of previous default settings files. If a user's settings still match
 # one of these, it is safe to replace them with the current defaults.
@@ -94,4 +95,13 @@ fi
 current=$(sha512sum "${CODE_EDITOR_SETTINGS_PATH}"|cut -d " " -f 1)
 if [[ " ${PREVIOUS_DEFAULT_CONFIG_HASHES[*]} " == *" ${current} "* ]]; then
     cp /root/.code-server/settings.json "${CODE_EDITOR_SETTINGS_PATH}"
+fi
+
+# Seed Home Assistant-aware Ruff defaults for new workspaces that do not
+# already define their own Ruff configuration.
+if [[ -n "${config_path:-}" ]] &&
+    ! bashio::fs.file_exists "${config_path}/.ruff.toml" &&
+    ! bashio::fs.file_exists "${config_path}/ruff.toml" &&
+    ! bashio::fs.file_exists "${config_path}/pyproject.toml"; then
+    cp "${CODE_EDITOR_RUFF_DEFAULT_PATH}" "${config_path}/.ruff.toml"
 fi
