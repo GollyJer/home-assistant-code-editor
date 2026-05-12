@@ -1,0 +1,16 @@
+#!/command/with-contenv bashio
+# shellcheck shell=bash
+# ==============================================================================
+# Code Editor
+# Runs the ingress proxy.
+# ==============================================================================
+bashio::log.info 'Starting ingress proxy...'
+
+mkdir -p \
+    /data/code-editor/nginx/body \
+    /data/code-editor/nginx/proxy \
+    /data/code-editor/nginx/fastcgi \
+    /data/code-editor/nginx/uwsgi \
+    /data/code-editor/nginx/scgi
+
+exec nginx -c /etc/nginx/nginx.conf -g 'daemon off;'

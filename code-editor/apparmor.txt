@@ -1,0 +1,50 @@
+#include <tunables/global>
+
+profile code_editor flags=(attach_disconnected,mediate_deleted) {
+  #include <abstractions/base>
+
+  file,
+  network inet stream,
+  network inet6 stream,
+  network inet dgram,
+  network inet6 dgram,
+  signal (send) set=(kill,term,int,hup,cont),
+
+  # s6-overlay and shell helpers
+  /init ix,
+  /bin/** ix,
+  /usr/bin/** ix,
+  /usr/sbin/nginx ix,
+  /usr/local/bin/** ix,
+  /usr/local/lib/code-server/bin/code-server ix,
+  /usr/local/lib/code-server/lib/node ix,
+  /usr/local/lib/code-server/lib/node_modules/** rix,
+  /usr/local/lib/code-server/** r,
+
+  /run/{s6,s6-rc*,service}/** ix,
+  /package/** ix,
+  /command/** ix,
+  /etc/services.d/** rwix,
+  /etc/cont-init.d/** rwix,
+  /etc/cont-finish.d/** rwix,
+  /usr/lib/bashio/** ix,
+
+  # Runtime state
+  /run/{,**} rwk,
+  /tmp/** rwk,
+  /dev/tty rw,
+  /dev/null rw,
+  /dev/urandom r,
+  /proc/** r,
+
+  # App data and mapped Home Assistant configuration
+  /data/** rwk,
+  /config/** rwk,
+  /homeassistant/** rwk,
+  /root/** rwk,
+
+  # Application and system configuration
+  /etc/** r,
+  /usr/local/share/code-server/** r,
+  /usr/share/** r,
+}

@@ -17,11 +17,11 @@ if bashio::config.has_value 'config_path'; then
     config_path=$(bashio::config 'config_path')
 fi
 
-options+=(--port 1337)
+options+=(--port 1338)
 options+=(--user-data-dir "${CODE_EDITOR_DATA_PATH}")
 options+=(--extensions-dir "${CODE_EDITOR_EXTENSIONS_PATH}")
 options+=(--config "${CODE_SERVER_CONFIG_PATH}")
-options+=(--host 0.0.0.0)
+options+=(--host 127.0.0.1)
 options+=(--disable-telemetry)
 options+=(--disable-update-check)
 

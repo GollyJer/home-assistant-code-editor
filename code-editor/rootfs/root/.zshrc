@@ -94,7 +94,7 @@ source $ZSH/oh-my-zsh.sh
 # Example aliases
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
-alias reset-settings="cp /root/.code-server/settings.json /data/vscode/User/settings.json && echo 'Setting restored!'"
+alias reset-settings="cp /root/.code-server/settings.json /data/code-editor/User/settings.json && echo 'Settings restored!'"
 
 # Home Assistant CLI
 source <(ha completion zsh) && compdef _ha ha

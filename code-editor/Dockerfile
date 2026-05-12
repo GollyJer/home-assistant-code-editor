@@ -1,7 +1,7 @@
 # hadolint ignore=DL3006
 FROM ghcr.io/hassio-addons/debian-base:9.3.0
 
-# Confiure locale
+# Configure locale
 ENV \
     LANG=en_US.UTF-8 \
     LANGUAGE=en_US:en \
@@ -33,6 +33,7 @@ RUN \
         iputils-ping=3:20240905-3 \
         locales=2.41-12+deb13u2 \
         net-tools=2.10-1.3 \
+        nginx-light=1.26.3-3+deb13u2 \
         nmap=7.95+dfsg-3 \
         openssh-client=1:10.0p1-7+deb13u2 \
         openssl=3.5.5-1~deb13u2 \
@@ -49,11 +50,12 @@ RUN \
     && sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen \
     && locale-gen \
     \
-    && curl https://bootstrap.pypa.io/get-pip.py | python3 \
+    && curl -fsSL https://bootstrap.pypa.io/get-pip.py | python3 \
     \
     && if [[ "${BUILD_ARCH}" = "aarch64" ]]; then ARCH="arm64"; fi \
     && if [[ "${BUILD_ARCH}" = "amd64" ]]; then ARCH="amd64"; fi \
-    && curl -J -L -o /tmp/code.tar.gz \
+    && if [[ -z "${ARCH:-}" ]]; then echo "Unsupported build architecture: ${BUILD_ARCH}"; exit 1; fi \
+    && curl -fJL --retry 5 -o /tmp/code.tar.gz \
         "https://github.com/coder/code-server/releases/download/${CODE_SERVER_VERSION}/code-server-${CODE_SERVER_VERSION#v}-linux-${ARCH}.tar.gz" \
     && mkdir -p /usr/local/lib/code-server \
     && tar zxf \
@@ -86,8 +88,9 @@ RUN \
     done < /root/vscode.extensions \
     && ls -la /usr/local/share/code-server/vsix/ \
     \
-    && curl -L -s -o /usr/bin/ha \
+    && curl -fsSL --retry 5 -o /usr/bin/ha \
         "https://github.com/home-assistant/cli/releases/download/${HA_CLI_VERSION}/ha_${BUILD_ARCH}" \
+    && [[ "$(head -c 4 /usr/bin/ha)" == $'\177ELF' ]] \
     && chmod a+x /usr/bin/ha \
     \
     && git clone --branch master --single-branch --depth 1 \
@@ -113,8 +116,10 @@ RUN \
         uuid-runtime \
     \
     && find /usr/local \
-        \( -type d -a -name test -o -name tests -o -name '__pycache__' \) \
-        -o \( -type f -a -name '*.pyc' -o -name '*.pyo' \) \
+        \( \
+            \( -type d \( -name test -o -name tests -o -name '__pycache__' \) \) \
+            -o \( -type f \( -name '*.pyc' -o -name '*.pyo' \) \) \
+        \) \
         -exec rm -rf '{}' + \
     \
     && rm -fr \
@@ -134,7 +139,7 @@ RUN \
 
 # Health check
 HEALTHCHECK \
-    CMD curl --fail http://127.0.0.1:1337/healthz || exit 1
+    CMD curl --fail http://127.0.0.1:1338/healthz || exit 1
 
 # Build arguments
 ARG BUILD_ARCH

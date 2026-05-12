@@ -34,6 +34,7 @@ summarizes the Code Editor modernization through
   in the `Dockerfile`.
 - Replaced inherited generic build labels with explicit Code Editor labels,
   maintainer details, and repository/documentation URLs.
+- Added repository metadata and app-store README content for Home Assistant.
 
 ### Faster Startup and Smaller Runtime Surface
 
@@ -49,6 +50,9 @@ summarizes the Code Editor modernization through
   keeping compatibility links for `/config` and `/homeassistant`.
 - Removed the redundant `yamllint` Python dependency and `libarchive-tools`
   package.
+- Added an nginx ingress proxy so code-server only listens on localhost and the
+  public ingress port only accepts Home Assistant Supervisor ingress traffic.
+- Added an AppArmor profile for the Code Editor app.
 - Continued to persist SSH settings, Git settings, zsh history, user-installed
   packages, and configured startup commands under `/data`.
 

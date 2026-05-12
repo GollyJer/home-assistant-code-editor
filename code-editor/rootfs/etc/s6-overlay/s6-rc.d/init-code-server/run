@@ -35,7 +35,7 @@ readonly -a PREVIOUS_DEFAULT_CONFIG_HASHES=(
 if bashio::config.has_value 'config_path'; then
     config_path=$(bashio::config 'config_path')
     if ! bashio::fs.directory_exists "${config_path}"; then
-        bashio::exit.nok "Configured config path does not exists"
+        bashio::exit.nok "Configured config path does not exist"
     fi
     # Prevent using root directory as workspace to avoid performance issues
     if [[ "${config_path}" == "/" ]]; then

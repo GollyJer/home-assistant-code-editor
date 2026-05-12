@@ -78,6 +78,16 @@ init_commands:
 
 If a command fails, Code Editor may not start correctly.
 
+## Security
+
+Code Editor is designed to be opened through Home Assistant ingress. The
+code-server process listens only on the app's local loopback interface, while an
+internal proxy accepts ingress traffic from Home Assistant Supervisor.
+
+The app also includes an AppArmor profile. Code Editor still has write access to
+your Home Assistant configuration folder by design, so only install extensions,
+packages, and startup commands that you trust.
+
 ## Resetting Editor Settings
 
 Code Editor includes default editor settings for Home Assistant files. Once you
