@@ -117,6 +117,7 @@
   "vsicons.dontShowNewVersionMessage": true,
   "vsicons.projectDetection.disableDetect": true,
   "workbench.activityBar.location": "top",
+  "workbench.colorTheme": "Default Dark Modern",
   "workbench.editor.highlightModifiedTabs": true,
   "workbench.iconTheme": "vscode-icons",
   "workbench.startupEditor": "none",
