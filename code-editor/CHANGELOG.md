@@ -1,9 +1,15 @@
 # Changelog
 
-This changelog starts at fork point
-`776ef9119524ff489345a6a60e13333264e67b1c` from December 30, 2025 and
-summarizes the Code Editor modernization through
-`a087e51e9a8b8bf72a238d881f52b89bf899770d` from May 12, 2026.
+## 1.118.0.1 - 2026-05-13
+
+This release patches the bundled `Home Assistant Extension`
+  (`v2.2.0`) to remove deprecated property markers
+  from its JSON schemas.
+  
+It now suggestes the modern Home Assistant syntax.
+- `triggers` instead of `platform`
+- `actions` instead of `service`
+  
 
 ## 1.118.0 - 2026-05-12
 
