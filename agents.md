@@ -110,13 +110,13 @@ cost and survives extension cache rebuilds.
 land quickly. Prefer build-time patches in this repo over waiting for
 upstream when the fix is mechanical.
 
-PR #4047 (comment-directive based modernization) was considered as an
-alternative; we stuck with the property-removal patch because it
-silently does the right thing without any user-visible markup. The
-two are orthogonal — #4047 suppresses runtime diagnostics with
-`source: "home-assistant"`, while our patch operates on the bundled
-JSON schemas — so shipping both works fine and our patch needs no
-changes to coexist with the directive feature.
+PR #4047 (ignore directives — `# homeassistant:ignore` /
+`disable-line` comment annotations that suppress lint warnings) is
+**open, not merged** upstream. It was authored by `@johntdyer`. The
+two are orthogonal to our schema patch — #4047 suppresses runtime
+diagnostics with `source: "home-assistant"`, while our patch operates
+on the bundled JSON schemas — so shipping both works fine and our
+patch needs no changes to coexist with the directive feature.
 
 ## Recent changes worth knowing
 
@@ -132,6 +132,14 @@ changes to coexist with the directive feature.
   2.2.0 to 2.3.0, shipped as a vendored VSIX under `code-editor/vendor/`.
   Schema patch still applies (2.3.0 carries even more `LEGACY_SYNTAX^`
   markers than 2.2.0 did).
+  **Provenance:** this 2.3.0 is *not* an official marketplace release —
+  it is a community build created and shared by `@mterry63`,
+  incorporating the still-unmerged PR #4047 (ignore directives, by
+  `@johntdyer`). There is no marketplace `2.3.0`, so the Dockerfile's
+  marketplace fallback cannot silently swap in a different package — a
+  missing vendor file fails the build loudly instead. If upstream ever
+  publishes its own `2.3.0`, revisit the version label to avoid a
+  collision.
 
 ## Common task → where to change it
 

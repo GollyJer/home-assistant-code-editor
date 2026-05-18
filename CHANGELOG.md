@@ -2,11 +2,20 @@
 
 ## 1.118.0.2 - 2026-05-18
 
-Updates the bundled `Home Assistant Extension` from `v2.2.0` to `v2.3.0`.
+Updates the bundled `Home Assistant Extension` from `v2.2.0` to a
+community-built `v2.3.0`.
+
+This build adds support for ignore directives, which let you silence
+false-positive linting warnings with comment annotations such as
+`# homeassistant:ignore` and `# homeassistant:disable-line`.
 
 The schema patch from `1.118.0.1` continues to apply, so YAML
 autocomplete still only suggests the modern Home Assistant syntax
 (`trigger`, `action`).
+
+Credits: the ignore-directives feature was contributed by `@johntdyer`
+in `vscode-home-assistant` PR #4047 (not yet merged upstream); the
+`v2.3.0` extension build was created and shared by `@mterry63`.
 
 ## 1.118.0.1 - 2026-05-13
 
